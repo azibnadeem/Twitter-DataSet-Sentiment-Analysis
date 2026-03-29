@@ -35,15 +35,20 @@ with st.expander("Analyze Your Text"):
 
     pre = st.text_input('Clean Your Text:')
     if pre:
-        cleaned = cleantext.clean(
-            pre,
-            clean_all=False,
-            extra_spaces=True,
-            stopwords=True,
-            lowercase=True,
-            numbers=True,
-            punct=True
-        )
+      cleaned = cleantext.clean(
+    pre,
+    fix_unicode=True,
+    to_ascii=False,
+    lower=True,
+    no_line_breaks=True,
+    no_urls=True,
+    no_emails=True,
+    no_phone_numbers=True,
+    no_numbers=False,
+    no_digits=False,
+    no_currency_symbols=True,
+    no_punct=False
+)
         st.write(cleaned)
 
 # ---------------- FILE ANALYSIS ---------------- #
