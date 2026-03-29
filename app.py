@@ -33,16 +33,24 @@ with st.expander("Analyze Your Text"):
 
         st.write('Subjectivity:', round(blob.sentiment.subjectivity, 2))
 
-   pre = st.text_input('Clean Your Text:')
+    # ✅ Fixed indentation
+    pre = st.text_input('Clean Your Text:')
+
     if pre:
+        # ✅ Fixed cleantext parameters
         cleaned = cleantext.clean(
             pre,
-            clean_all=False,
-            extra_spaces=True,
-            stopwords=True,
-            lowercase=True,
-            numbers=True,
-            punct=True
+            fix_unicode=True,
+            to_ascii=False,
+            lower=True,
+            no_line_breaks=True,
+            no_urls=True,
+            no_emails=True,
+            no_phone_numbers=True,
+            no_numbers=False,
+            no_digits=False,
+            no_currency_symbols=True,
+            no_punct=False
         )
         st.write(cleaned)
 
