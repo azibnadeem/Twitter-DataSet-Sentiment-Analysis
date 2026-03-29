@@ -71,19 +71,7 @@ with st.expander('Analyze Excel files'):
         else:
             return 'Neutral'
 
-    if upl:
-    try:
-        # Detect file type
-        if upl.name.endswith('.csv'):
-            df = pd.read_csv(upl)
-        else:
-            df = pd.read_excel(upl, engine='openpyxl')
-
-        # Check column existence
-        if 'Tweets' not in df.columns:
-            st.error("Column 'Tweets' not found in file")
-        else:
-            if upl is not None:
+   if upl is not None:
     try:
         # Handle CSV
         if upl.name.endswith('.csv'):
