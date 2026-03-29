@@ -33,11 +33,11 @@ with st.expander("Analyze Your Text"):
 
         st.write('Subjectivity:', round(blob.sentiment.subjectivity, 2))
 
-    # ✅ Fixed indentation
+    
     pre = st.text_input('Clean Your Text:')
 
     if pre:
-        # ✅ Fixed cleantext parameters
+     
         cleaned = cleantext.clean(
             pre,
             fix_unicode=True,
@@ -58,7 +58,7 @@ with st.expander("Analyze Your Text"):
 with st.expander('Analyze Excel files'):
     st.write("_**Note**_ : Your file must contain the column name 'Tweets'.")
 
-    upl = st.file_uploader('Upload file')
+    upl = st.file_uploader('Upload file', type=['csv', 'xlsx'])
 
     def score(x):
         return TextBlob(str(x)).sentiment.polarity
@@ -83,6 +83,27 @@ with st.expander('Analyze Excel files'):
         if 'Tweets' not in df.columns:
             st.error("Column 'Tweets' not found in file")
         else:
+            if upl is not None:
+    try:
+        # Handle CSV
+        if upl.name.endswith('.csv'):
+            df = pd.read_csv(upl)
+
+        # Handle Excel
+        elif upl.name.endswith('.xlsx'):
+            import openpyxl
+            df = pd.read_excel(upl, engine='openpyxl')
+
+        else:
+            st.error("Unsupported file format")
+            st.stop()
+
+        # Debug: show columns
+        st.write("Columns in file:", df.columns)
+
+        if 'Tweets' not in df.columns:
+            st.error("Column 'Tweets' not found in file")
+        else:
             df['score'] = df['Tweets'].apply(score)
             df['analysis'] = df['score'].apply(analyze)
 
@@ -100,6 +121,10 @@ with st.expander('Analyze Excel files'):
                 file_name='sentiment.csv',
                 mime='text/csv',
             )
+
+    except Exception as e:
+        st.error("File reading failed")
+        st.write(e)
 
     except Exception as e:
         st.error("Error reading file. Please upload a valid CSV or Excel file.")
