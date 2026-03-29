@@ -33,9 +33,9 @@ with st.expander("Analyze Your Text"):
 
         st.write('Subjectivity:', round(blob.sentiment.subjectivity, 2))
 
-    pre = st.text_input('Clean Your Text:')
+   pre = st.text_input('Clean Your Text:')
     if pre:
-    cleaned = cleantext.clean(
+        cleaned = cleantext.clean(
             pre,
             clean_all=False,
             extra_spaces=True,
