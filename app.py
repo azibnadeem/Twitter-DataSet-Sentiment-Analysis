@@ -72,7 +72,12 @@ with st.expander('Analyze Excel files'):
             return 'Neutral'
 
     if upl:
-        df = pd.read_excel(upl)
+    try:
+        # Detect file type
+        if upl.name.endswith('.csv'):
+            df = pd.read_csv(upl)
+        else:
+            df = pd.read_excel(upl, engine='openpyxl')
 
         # Check column existence
         if 'Tweets' not in df.columns:
@@ -95,6 +100,10 @@ with st.expander('Analyze Excel files'):
                 file_name='sentiment.csv',
                 mime='text/csv',
             )
+
+    except Exception as e:
+        st.error("Error reading file. Please upload a valid CSV or Excel file.")
+        st.exception(e)
 
 # ---------------- FOOTER ---------------- #
 st.write("\n" * 5)
