@@ -55,6 +55,7 @@ with st.expander("Analyze Your Text"):
         st.write(cleaned)
 
 # ---------------- FILE ANALYSIS ---------------- #
+# ---------------- FILE ANALYSIS ---------------- #
 with st.expander('Analyze Excel files'):
     st.write("_**Note**_ : Your file must contain the column name 'Tweets'.")
 
@@ -71,52 +72,49 @@ with st.expander('Analyze Excel files'):
         else:
             return 'Neutral'
 
-   if upl is not None:
-    try:
-        # Handle CSV
-        if upl.name.endswith('.csv'):
-            df = pd.read_csv(upl)
+    # FIXED INDENTATION BELOW
+    if upl is not None:
+        try:
+            # Handle CSV
+            if upl.name.endswith('.csv'):
+                df = pd.read_csv(upl)
 
-        # Handle Excel
-        elif upl.name.endswith('.xlsx'):
-            import openpyxl
-            df = pd.read_excel(upl, engine='openpyxl')
+            # Handle Excel
+            elif upl.name.endswith('.xlsx'):
+                # import openpyxl # Best to move this to the top of your file
+                df = pd.read_excel(upl, engine='openpyxl')
 
-        else:
-            st.error("Unsupported file format")
-            st.stop()
+            else:
+                st.error("Unsupported file format")
+                st.stop()
 
-        # Debug: show columns
-        st.write("Columns in file:", df.columns)
+            # Debug: show columns
+            st.write("Columns in file:", df.columns)
 
-        if 'Tweets' not in df.columns:
-            st.error("Column 'Tweets' not found in file")
-        else:
-            df['score'] = df['Tweets'].apply(score)
-            df['analysis'] = df['score'].apply(analyze)
+            if 'Tweets' not in df.columns:
+                st.error("Column 'Tweets' not found in file")
+            else:
+                df['score'] = df['Tweets'].apply(score)
+                df['analysis'] = df['score'].apply(analyze)
 
-            st.write(df.head(10))
+                st.write(df.head(10))
 
-            @st.cache_data
-            def convert_df(df):
-                return df.to_csv(index=False).encode('utf-8')
+                @st.cache_data
+                def convert_df(df):
+                    return df.to_csv(index=False).encode('utf-8')
 
-            csv = convert_df(df)
+                csv = convert_df(df)
 
-            st.download_button(
-                label="Download data as CSV",
-                data=csv,
-                file_name='sentiment.csv',
-                mime='text/csv',
-            )
+                st.download_button(
+                    label="Download data as CSV",
+                    data=csv,
+                    file_name='sentiment.csv',
+                    mime='text/csv',
+                )
 
-    except Exception as e:
-        st.error("File reading failed")
-        st.write(e)
-
-    except Exception as e:
-        st.error("Error reading file. Please upload a valid CSV or Excel file.")
-        st.exception(e)
+        except Exception as e:
+            st.error("Error reading file. Please upload a valid CSV or Excel file.")
+            st.exception(e)
 
 # ---------------- FOOTER ---------------- #
 st.write("\n" * 5)
